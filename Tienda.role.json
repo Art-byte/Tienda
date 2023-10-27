@@ -1,0 +1,21 @@
+[{
+  "_id": {
+    "$oid": "653c12bc613e9c331498b0c3"
+  },
+  "name": "ROLE_ADMIN",
+  "_class": "com.mx.arturo.examen.tienda.model.Role"
+},
+{
+  "_id": {
+    "$oid": "653c12cd613e9c331498b0c4"
+  },
+  "name": "ROLE_PROVEEDOR",
+  "_class": "com.mx.arturo.examen.tienda.model.Role"
+},
+{
+  "_id": {
+    "$oid": "653c12d8613e9c331498b0c5"
+  },
+  "name": "ROLE_VENDEDOR",
+  "_class": "com.mx.arturo.examen.tienda.model.Role"
+}]

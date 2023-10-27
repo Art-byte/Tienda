@@ -1,0 +1,16 @@
+[{
+  "_id": {
+    "$oid": "653c15f37c2e6c1443c425db"
+  },
+  "name": "Arturo",
+  "lastName": "Pedraza Bonilla",
+  "roles": [
+    {
+      "$oid": "653c12d8613e9c331498b0c5"
+    },
+    {
+      "$oid": "653c12bc613e9c331498b0c3"
+    }
+  ],
+  "_class": "com.mx.arturo.examen.tienda.model.User"
+}]
