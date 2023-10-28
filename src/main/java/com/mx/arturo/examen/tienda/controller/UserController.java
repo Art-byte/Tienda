@@ -95,31 +95,35 @@ public class UserController {
     //Metodos para controlar los roles del usuario
 
     @PostMapping("/user/role/{id}")
-    public ResponseEntity<?> addRoleToUser(@PathVariable String id, @RequestParam("roleName") String roleName){
+    public ResponseEntity<?> addRoleToUser(@PathVariable String id, @RequestParam("roleName") String roleName) {
         try {
-            ObjectId userId = new ObjectId(id);
-            User user = userRepository.findById(userId).orElse(null);
+            User user = userRepository.findById(new ObjectId(id)).orElse(null);
             if (user == null) {
                 return new ResponseEntity<>("El usuario no se encontró en la base de datos", HttpStatus.NOT_FOUND);
             }
 
             Role role = roleRepositoy.findByName(roleName);
-            if (role == null) {
-                return new ResponseEntity<>("El rol no se encontró en la base de datos", HttpStatus.NOT_FOUND);
+            List<ObjectId> oldRoleList = user.getRoles();
+
+            List<ObjectId> roleList = new ArrayList<>();
+
+            if(!oldRoleList.isEmpty()){
+                for(ObjectId idRole : oldRoleList){
+                    roleList.add(idRole);
+                }
             }
-            List<ObjectId> roles = user.getRoles();
-            if (!roles.contains(role.getId())) {
-                roles.add(role.getId());
-                user.setRoles(roles);
-                userRepository.save(user);
-                return new ResponseEntity<>(user, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("El usuario ya cuenta con este rol", HttpStatus.BAD_REQUEST);
-            }
+
+            roleList.add(role.getId());
+
+            user.setRoles(roleList);
+            userRepository.save(user);
+            return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (Exception e) {
+            System.out.println(e.getCause());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
 
     @DeleteMapping("/user/role/{id}")
@@ -149,21 +153,21 @@ public class UserController {
     @GetMapping("/formatUser/{id}")
     public ResponseEntity<UserVo> getUserFormated(@PathVariable String id){
 
-         try{
-             List<String> roleNames = new ArrayList<>();
-             User user = userRepository.findById(new ObjectId(id)).orElse(null);
+        try{
+            List<String> roleNames = new ArrayList<>();
+            User user = userRepository.findById(new ObjectId(id)).orElse(null);
 
-             for(ObjectId idRole : user.getRoles()){
-                 Role role = roleRepositoy.findById(idRole).orElse(null);
-                 roleNames.add(role.getName());
-             }
+            for(ObjectId idRole : user.getRoles()){
+                Role role = roleRepositoy.findById(idRole).orElse(null);
+                roleNames.add(role.getName());
+            }
 
-                UserVo userVos = new UserVo();
-                userVos.setId(user.getId());
-                userVos.setName(user.getName());
-                userVos.setLastName(user.getLastName());
-                userVos.setRoles(roleNames);
-                return new ResponseEntity<>(userVos, HttpStatus.OK);
+            UserVo userVos = new UserVo();
+            userVos.setId(user.getId());
+            userVos.setName(user.getName());
+            userVos.setLastName(user.getLastName());
+            userVos.setRoles(roleNames);
+            return new ResponseEntity<>(userVos, HttpStatus.OK);
 
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
